@@ -1,17 +1,15 @@
 from hashlib import pbkdf2_hmac
 from json import dumps
-
-from sqlalchemy import Integer, String, \
-    Boolean, Column, DateTime
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
-from flask import current_app
+
+from sqlalchemy import Integer, String, Column, DateTime
+from sqlalchemy.ext.declarative import declarative_base
 from flask_jwt_extended import create_access_token, create_refresh_token
 
-Base = declarative_base()
 
+user_base = declarative_base()
 
-class User(Base):# User model
+class User(user_base):# User model
     __tablename__ = "users"
     
     id = Column(Integer, primary_key = True)
@@ -38,9 +36,8 @@ class User(Base):# User model
             'create_date': dumps(self.create_date, default=str)
         }
     
-    def save_to_db(self):
+    def save_to_db(self, session):
         try:
-            session = current_app.config['db_connect']
             session.add(self)
             session.commit()
 

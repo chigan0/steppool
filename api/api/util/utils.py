@@ -1,11 +1,14 @@
 from smtplib import SMTP_SSL,SMTP
 from ssl import create_default_context,SSLCertVerificationError
 from hashlib import pbkdf2_hmac
+from random import randint
+import pickle
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from jinja2 import Template
 from time import time
+import redis
 
 
 def send_mail(email_to, 
@@ -55,3 +58,36 @@ def send_mail(email_to,
 
 def get_password_hash(password, config):
 	return pbkdf2_hmac('sha256', password.encode('utf-8'), config['SECRET_KEY'].encode('utf-8'),100000).hex()
+
+
+def generator_random_str(str_length):
+	return ''.join([str(randint(0,9)) for i in range(str_length)])
+
+
+def create_order_list(coin_name, address, qr_url, amount, jwt_data):
+	order_list = pickle.dumps({
+			"coin": coin_name,
+			"address": address,
+			"qr_url": qr_url,
+			"amount": amount,
+			"user_public_id": jwt_data['public_id'],
+			"email": jwt_data['email'],
+			"user_confirm": False,
+			"admin_condirm": False
+	})
+
+	return order_list
+
+
+def check_add_delete_order_redis(user_public_id, order_id):
+	redis_conn = redis.Redis()
+	order_list = redis_conn.lrange(user_public_id, 0, -1)
+
+
+	if len(order_list) >= 25:
+		return None
+
+	redis_conn.lpush(user_public_id, order_id)
+
+	redis_conn.close()
+	return True

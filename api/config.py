@@ -10,11 +10,15 @@ class Config:
 
 class TestConfig(Config):
 	SQLALCHEMY_DATABASE_URI = "mysql+pymysql://test_user:Sql_-132442@127.0.0.1:3306/test"
+	SQLALCHEMY_TRACK_MODIFICATIONS = False
+	POOL_SIZE = 20
 	# All Token and Code Expires Times
 	JWT_SECRET_KEY = os.getenv("SECRET_KEY")
 	ACCESS_EXPIRES = timedelta(minutes = 20)
 	REFRESH_EXPIRES = timedelta(days = 3)
 	VERIF_EXPIRE = timedelta(minutes = 10)
+	USER_CONFIRM_EXPIRE = timedelta(hours = 1)
+	ADM_CONFIRM_EXPIRE = timedelta(hours = 6)
 	JWT_ACCESS_TOKEN_EXPIRES = ACCESS_EXPIRES
 	JWT_REFRESH_TOKEN_EXPIRES = REFRESH_EXPIRES
 	# Mail Configuration
