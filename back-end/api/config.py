@@ -6,7 +6,7 @@ class Config:
 	SECRET_KEY = os.getenv("SECRET_KEY")
 	DEBUG = True
 	VERSION = "v1"
-	SECRET_KEY_HCA = "0xd85d576c8aBAEFA04e987987b0d7FCf144447b35"
+	SECRET_KEY_HCA = os.getenv("SECRET_KEY_HCA")
 	REDIS_URL = os.getenv('REDIS_URL') or 'redis://'
 
 	REGEX_DICT = {"email": "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$",
@@ -32,7 +32,7 @@ class Config:
 
 
 class TestConfig(Config):
-	SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://step_user:Sql_-132442@localhost/steppool"
+	SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
 	POOL_SIZE = 20
 	# All Token and Code Expires Times
@@ -49,7 +49,7 @@ class TestConfig(Config):
 	MAIL_PORT = 465
 	MAIL_USE_TLS = True
 	MAIL_USERNAME = "naz.abylai50@gmail.com"
-	MAIL_PASSWORD = "aveedkprdbobroje"
+	MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
 
 
 class ProdConfig(Config):
